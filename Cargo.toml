@@ -1,0 +1,11 @@
+[package]
+name = "weechat-rs"
+description = "A safe Rust shim for writing Weechat plugins"
+version = "0.1.0"
+authors = ["Katharina Fey <kookie@spacekookie.de>"]
+edition = "2018"
+
+[dependencies]
+libc = "*"
+cbindgen = "*"
+
