@@ -1,0 +1,12 @@
+[package]
+name = "hello_weechat"
+version = "0.1.0"
+authors = ["Katharina Fey <kookie@spacekookie.de>"]
+edition = "2018"
+
+[lib]
+name = "pluggy"
+crate-type = ["cdylib"]
+
+[dependencies]
+weechat_rs = { path = "../.." }

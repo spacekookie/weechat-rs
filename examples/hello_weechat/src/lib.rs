@@ -7,33 +7,33 @@ use weechat_rs::ffi::{t_gui_buffer, t_weechat_plugin, WEECHAT_RC_OK};
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_name: &[u8] = "pluggy".as_bytes();
+pub static weechat_plugin_name: [u8; 6] = *b"pluggy";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_api_version: &[u8] = weechat_rs::ffi::WEECHAT_PLUGIN_API_VERSION;
+pub static weechat_plugin_api_version: [u8; 12] = *weechat_rs::ffi::WEECHAT_PLUGIN_API_VERSION;
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_author: &[u8] = "Katharina Fey <kookie@spacekookie.de>".as_bytes();
+pub static weechat_plugin_author: [u8; 13] = *b"Katharina Fey";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_description: &[u8] = "A stupid shitty plugin for stupid shit".as_bytes();
+pub static weechat_plugin_description: [u8; 3] = *b"bla";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_version: &[u8] = "1.0".as_bytes();
+pub static weechat_plugin_version: [u8; 3] = *b"1.0";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_license: &[u8] = "WTFPL".as_bytes();
+pub static weechat_plugin_license: [u8; 5] = *b"WTFPL";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin: *mut t_weechat_plugin = ::std::ptr::null_mut();
+pub static mut weechat_plugin: *mut t_weechat_plugin = ::std::ptr::null_mut();
 
-unsafe extern "C" fn plugging_cb(
+pub unsafe extern "C" fn plugging_cb(
     ptr: *const c_void,
     data: *mut c_void,
     buffer: *mut t_gui_buffer,
@@ -47,12 +47,20 @@ unsafe extern "C" fn plugging_cb(
     //     (weechat_plugin->printf_date_tags)(__buffer, 0, NULL, __message,    \
     //                                    ##__argz)
 
+// fn(
+//             buffer: *mut t_gui_buffer,
+//             date: time_t,
+//             tags: *const ::std::os::raw::c_char,
+//             message: *const ::std::os::raw::c_char,
+//             ...
+//         ),
+
     (*weechat_plugin).printf_date_tags.unwrap()(
         buffer,
         0,
         ::std::ptr::null_mut(),
         "Yo what's up?!".as_ptr() as *const i8,
-        ::std::ptr::null_mut(),
+        ::std::ptr::null_mut::<*const ::std::os::raw::c_char>(),
     );
 
     // We say it's fine but it's really not 😭
@@ -60,12 +68,12 @@ unsafe extern "C" fn plugging_cb(
 }
 
 #[no_mangle]
-extern "C" fn weechat_plugin_init(
+pub extern "C" fn weechat_plugin_init(
     plugin: *mut t_weechat_plugin,
     argc: c_int,
     argv: *const *const c_char,
 ) -> c_int {
-    weechat_plugin = plugin;
+    unsafe { weechat_plugin = plugin };
 
     // Next the ... hook...macro... *bursts into tears*
     // #define weechat_hook_command(__command, __description, __args,          \
@@ -93,7 +101,7 @@ extern "C" fn weechat_plugin_init(
 }
 
 #[no_mangle]
-extern "C" fn weechat_plugin_end(plugin: *mut t_weechat_plugin) -> c_int {
+pub extern "C" fn weechat_plugin_end(plugin: *mut t_weechat_plugin) -> c_int {
 
     WEECHAT_RC_OK as i32
 }
