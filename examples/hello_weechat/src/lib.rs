@@ -7,7 +7,7 @@ use weechat_rs::ffi::{t_gui_buffer, t_weechat_plugin, WEECHAT_RC_OK};
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_name: [u8; 6] = *b"pluggy";
+pub static weechat_plugin_name: [u8; 7] = *b"pluggy\0";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
@@ -15,19 +15,19 @@ pub static weechat_plugin_api_version: [u8; 12] = *weechat_rs::ffi::WEECHAT_PLUG
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_author: [u8; 13] = *b"Katharina Fey";
+pub static weechat_plugin_author: [u8; 14] = *b"Katharina Fey\0";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_description: [u8; 3] = *b"bla";
+pub static weechat_plugin_description: [u8; 4] = *b"bla\0";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_version: [u8; 3] = *b"1.0";
+pub static weechat_plugin_version: [u8; 4] = *b"1.0\0";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
-pub static weechat_plugin_license: [u8; 5] = *b"WTFPL";
+pub static weechat_plugin_license: [u8; 6] = *b"WTFPL\0";
 
 #[allow(non_upper_case_globals)]
 #[no_mangle]
@@ -59,7 +59,7 @@ pub unsafe extern "C" fn plugging_cb(
         buffer,
         0,
         ::std::ptr::null_mut(),
-        "Yo what's up?!".as_ptr() as *const i8,
+        "Yo what's up?!\0".as_ptr() as *const i8,
         ::std::ptr::null_mut::<*const ::std::os::raw::c_char>(),
     );
 
@@ -86,10 +86,10 @@ pub extern "C" fn weechat_plugin_init(
     unsafe {
         (*weechat_plugin).hook_command.unwrap()(
             plugin,
-            "plugger".as_ptr() as *const i8,
-            "Plugs things into other things".as_ptr() as *const i8,
-            "object".as_ptr() as *const i8,
-            "object: Just some object you like\n".as_ptr() as *const i8,
+            "plugger\0".as_ptr() as *const i8,
+            "Plugs things into other things\0".as_ptr() as *const i8,
+            "object\0".as_ptr() as *const i8,
+            "object: Just some object you like\0".as_ptr() as *const i8,
             ::std::ptr::null_mut(),
             Some(plugging_cb),
             ::std::ptr::null_mut(),
