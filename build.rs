@@ -1,18 +1,30 @@
-extern crate cmake;
 extern crate bindgen;
+extern crate cmake;
+
+use bindgen::Builder;
+use cmake::Config;
+use std::fs;
 
 fn main() {
-    let dst = cmake::build("weechat");
-    println!("cargo:rustc-link-search=native={}/build/src/plugins", dst.display());
+    let dst = Config::new("weechat")
+        .define("ENABLE_SCRIPTS", "OFF")
+        .build();
+
+    println!(
+        "cargo:rustc-link-search=native={}/build/src/plugins",
+        dst.display()
+    );
     println!("cargo:rustc-link-lib=static=weechat_plugins");
 
-    let bind = binder::Builder::default()
-        .header("wrapper.h")
+    let bindings = Builder::default()
+        .header("weechat/src/plugins/plugin.h")
         .generate()
         .expect("Unable to generate bindings");
 
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-        bindings
-            .write_to_file(out_path.join("bindings.rs"))
-            .expect("Couldn't write bindings!");
+    #[allow(unused_result)]
+    fs::remove_file("src/ffi/mod.rs");
+
+    bindings
+        .write_to_file("src/ffi/mod.rs")
+        .expect("Couldn't write bindings!");
 }
