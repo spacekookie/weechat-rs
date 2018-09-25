@@ -23,11 +23,17 @@ pub struct WeechatPlugin {
 }
 
 type WeechatCallback = unsafe extern "C" fn(
+    // Plugin pointer
     *const c_void,
+    // data pointer
     *mut c_void,
+    // buffer where command is executed
     *mut t_gui_buffer,
+    // number of arguments given
     c_int,
+    // arguments given for command
     *mut *mut c_char,
+    // arguments given to EOL (???)
     *mut *mut c_char,
 );
 
@@ -40,7 +46,6 @@ impl WeechatPlugin {
         args: &str,
         args_descr: &str,
         completion: &str,
-        args: Vec<WeechatArg>,
         cb: WeechatCallback,
     ) {
     }
